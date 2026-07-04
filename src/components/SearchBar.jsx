@@ -22,7 +22,7 @@ const SearchBar = () => {
       sx={{
         borderRadius: 20,
         border: '1px solid #e3e3e3',
-        pl: 2, // Gives breath space on the left
+        pl: 2,
         boxShadow: 'none',
         mr: { sm: 5 },
         display: 'flex',
@@ -31,7 +31,6 @@ const SearchBar = () => {
         height: '40px'
       }}
     >
-      {/* Search Icon placed FIRST handles the leftmost positioning */}
       <IconButton type="submit" sx={{ p: '10px', color: 'red' }} aria-label="search">
         <SearchIcon />
       </IconButton>

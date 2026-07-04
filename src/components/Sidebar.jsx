@@ -1,57 +1,62 @@
-import { Stack } from '@mui/material';
-// Importing the exact icons for your new categories
+import { Stack, Typography, Divider, Box } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
+import ExploreIcon from '@mui/icons-material/Explore';
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import HistoryIcon from '@mui/icons-material/History';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import BrushIcon from '@mui/icons-material/Brush';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 
-const categories = [
-  { name: 'New', icon: <HomeIcon /> },
-  { name: 'Music', icon: <MusicNoteIcon /> },
-  { name: 'Tech', icon: <LaptopMacIcon /> },
-  { name: 'Gaming', icon: <SportsEsportsIcon /> },
-  { name: 'Cooking', icon: <RestaurantIcon /> },
-  { name: 'Crafts', icon: <BrushIcon /> },
-];
+const Sidebar = () => {
+  const renderRow = (icon, text, isActive = false) => (
+    <Stack
+      direction="row"
+      alignItems="center"
+      gap={3}
+      sx={{
+        backgroundColor: isActive ? '#212121' : 'transparent',
+        padding: '10px 24px',
+        borderRadius: '10px',
+        cursor: 'pointer',
+        width: '100%',
+        '&:hover': { backgroundColor: '#212121' }
+      }}
+    >
+      <span style={{ color: 'white', display: 'flex', alignItems: 'center' }}>{icon}</span>
+      <Typography variant="body2" sx={{ color: 'white', fontWeight: isActive ? 'bold' : 'normal' }}>
+        {text}
+      </Typography>
+    </Stack>
+  );
 
-const Sidebar = ({ selectedCategory, setSelectedCategory }) => (
-  <Stack
-    direction="row"
-    sx={{
-      overflowY: 'auto',
-      height: { sx: 'auto', md: '95%' },
-      flexDirection: { md: 'column' },
-    }}
-  >
-    {categories.map((category) => (
-      <button
-        onClick={() => setSelectedCategory(category.name)}
-        style={{
-          background: category.name === selectedCategory ? '#FC1503' : 'transparent',
-          color: 'white',
-          border: 'none',
-          padding: '12px 24px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '15px',
-          borderRadius: '20px',
-          margin: '5px 10px',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease'
-        }}
-        key={category.name}
-      >
-        <span style={{ color: category.name === selectedCategory ? 'white' : '#FC1503', display: 'flex', alignItems: 'center' }}>
-          {category.icon}
-        </span>
-        <span style={{ opacity: category.name === selectedCategory ? '1' : '0.8', fontWeight: '500' }}>
-          {category.name}
-        </span>
-      </button>
-    ))}
-  </Stack>
-);
+  return (
+    <Box sx={{ width: '240px', height: '92vh', overflowY: 'auto', pr: 1, pt: 1 }}>
+      {/* Section 1 */}
+      {renderRow(<HomeIcon />, 'Home', true)}
+      {renderRow(<ExploreIcon />, 'Explore')}
+      {renderRow(<SubscriptionsIcon />, 'Subscriptions')}
+      
+      <Divider sx={{ borderColor: '#3d3d3d', my: 1.5 }} />
+
+      {/* Section 2: You */}
+      <Typography variant="subtitle2" sx={{ color: 'white', px: 3, fontWeight: 'bold', mb: 1 }}>You</Typography>
+      {renderRow(<VideoLibraryIcon />, 'Library')}
+      {renderRow(<HistoryIcon />, 'History')}
+
+      <Divider sx={{ borderColor: '#3d3d3d', my: 1.5 }} />
+
+      {/* Section 3: Explore Options */}
+      <Typography variant="subtitle2" sx={{ color: 'white', px: 3, fontWeight: 'bold', mb: 1 }}>Explore</Typography>
+      {renderRow(<WhatshotIcon />, 'Trending')}
+      {renderRow(<MusicNoteIcon />, 'Music')}
+      {renderRow(<SportsEsportsIcon />, 'Gaming')}
+      {renderRow(<EmojiEventsIcon />, 'Sports')}
+      {renderRow(<LocalMoviesIcon />, 'Movies')}
+    </Box>
+  );
+};
 
 export default Sidebar;

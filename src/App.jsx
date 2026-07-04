@@ -7,7 +7,6 @@ import ChannelDetail from './components/ChannelDetail';
 import SearchFeed from './components/SearchFeed';
 
 const App = () => (
-  // Solves the blank entry screen by adapting dynamically to GitHub Pages subfolders
   <BrowserRouter basename={process.env.NODE_ENV === 'production' ? '/youtube-clone' : ''}>
     <Box sx={{ backgroundColor: '#0f0f0f' }}>
       <Navbar />

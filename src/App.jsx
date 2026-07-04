@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
-
-// Import your components
 import Navbar from './components/Navbar';
 import Feed from './components/Feed';
 import VideoDetail from './components/VideoDetail';
@@ -9,11 +7,11 @@ import ChannelDetail from './components/ChannelDetail';
 import SearchFeed from './components/SearchFeed';
 
 const App = () => (
-  <BrowserRouter>
+  // Solves the blank entry screen by adapting dynamically to GitHub Pages subfolders
+  <BrowserRouter basename={process.env.NODE_ENV === 'production' ? '/youtube-clone' : ''}>
     <Box sx={{ backgroundColor: '#0f0f0f' }}>
       <Navbar />
       <Routes>
-        {/* This line forces Feed to load instantly on the homepage */}
         <Route exact path="/" element={<Feed />} />
         <Route path="/video/:id" element={<VideoDetail />} />
         <Route path="/channel/:id" element={<ChannelDetail />} />

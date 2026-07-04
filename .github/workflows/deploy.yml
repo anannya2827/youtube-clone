@@ -1,0 +1,45 @@
+name: Build and Deploy YouTube Clone
+
+on:
+  push:
+    branches:
+      - main  # Triggers the workflow whenever you push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out your repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-size: 20
+          cache: 'npm'
+          cache-dependency-path: './youtube-clone/package-lock.json'
+
+      # Step 3: Install dependencies inside your project folder
+      - name: Install Dependencies
+        run: |
+          cd youtube-clone
+          npm ci
+
+      # Step 4: Build the production assets
+      - name: Build Application
+        run: |
+          cd youtube-clone
+          npm run build
+        env:
+          # This protects your key so it isn't hardcoded publicly in github
+          VITE_RAPID_API_KEY: ${{ secrets.RAPID_API_KEY }} 
+
+      # Step 5: Deploy the built files (Example setup for GitHub Pages)
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: youtube-clone/dist # Vite outputs production files to the 'dist' folder
+          branch: gh-pages # The branch the deployment files will be pushed to

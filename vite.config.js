@@ -5,5 +5,5 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // Add the base property below if deploying to GitHub Pages:
-  base: process.env.NODE_ENV === 'production' ? '/youtube-clone/' : '/',
+  base:'/youtube-clone/',
 })

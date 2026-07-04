@@ -1,38 +1,67 @@
 import { useState, useEffect } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography, Button } from '@mui/material';
 import { fetchFromAPI } from '../utils/fetchFromAPI';
 import Sidebar from './Sidebar';
 import Videos from './Videos';
 
+const tags = ['New', 'Music', 'Sports', 'Gaming', 'Fashion', 'Coding', 'Movies', 'News', 'Live', 'Crypto', 'Sci-Fi'];
+
 const Feed = () => {
-  const [selectedCategory, setSelectedCategory] = useState('New');
+  const [selectedCategory, setSelectedCategory] = useState('Coding'); // Active category from screenshot
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-  fetchFromAPI(`search?part=snippet&q=${selectedCategory}`)
-    .then((data) => {
-      if (data?.items) {
-        setVideos(data.items);
-      }
-    })
-    .catch((error) => {
-      console.error("API Fetching Error: ", error);
-    });
-}, [selectedCategory]);
+    fetchFromAPI(`search?part=snippet&q=${selectedCategory}`)
+      .then((data) => setVideos(data.items))
+      .catch((err) => console.log(err));
+  }, [selectedCategory]);
 
   return (
-    <Stack sx={{ flexDirection: { sx: "column", md: "row" } }}>
-      <Box sx={{ height: { sx: 'auto', md: '92vh' }, borderRight: '1px solid #3d3d3d', px: { sx: 0, md: 2 } }}>
-        <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
-        <Typography variant="body2" sx={{ mt: 1.5, color: '#fff', textAlign: 'center', opacity: 0.5 }}>
-          © 2026 YouTube Clone
-        </Typography>
+    <Stack sx={{ flexDirection: 'row', backgroundColor: '#0f0f0f' }}>
+      {/* Left fixed Sidebar Panel */}
+      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Sidebar />
       </Box>
 
-      <Box p={2} sx={{ overflowY: 'auto', height: '90vh', flex: 2 }}>
-        <Typography variant="h4" fontWeight="bold" mb={2} sx={{ color: 'white' }}>
-          {selectedCategory} <span style={{ color: '#FC1503' }}>videos</span>
-        </Typography>
+      {/* Main Dynamic Workspace Area */}
+      <Box p={2} sx={{ overflowY: 'auto', height: '92vh', flex: 1 }}>
+        
+        {/* Horizontal Scroll Bar for Sub-category Tags */}
+        <Stack 
+          direction="row" 
+          gap={1.5} 
+          sx={{ 
+            overflowX: 'auto', 
+            mb: 3, 
+            pb: 1,
+            '&::-webkit-scrollbar': { height: '0px' }, // Hide horizontal scrollbar line
+          }}
+        >
+          {tags.map((tag) => (
+            <Button
+              key={tag}
+              onClick={() => setSelectedCategory(tag)}
+              variant="contained"
+              sx={{
+                backgroundColor: tag === selectedCategory ? 'white' : '#212121',
+                color: tag === selectedCategory ? 'black' : 'white',
+                textTransform: 'none',
+                borderRadius: '8px',
+                fontWeight: '500',
+                whiteSpace: 'nowrap',
+                padding: '6px 14px',
+                minWidth: 'auto',
+                '&:hover': {
+                  backgroundColor: tag === selectedCategory ? 'white' : '#3d3d3d',
+                }
+              }}
+            >
+              {tag}
+            </Button>
+          ))}
+        </Stack>
+
+        {/* Video Grid Display layout */}
         <Videos videos={videos} />
       </Box>
     </Stack>

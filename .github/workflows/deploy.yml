@@ -14,12 +14,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js environment
+    # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-size: 20
+          node-version: 22  # Fixed from 'node-size' to 'node-version' and updated to a stable version
           cache: 'npm'
+          # If your package-lock.json is inside the youtube-clone folder, keep this line. 
+          # If it's sitting in your main root project directory instead, delete this line entirely.
           cache-dependency-path: './youtube-clone/package-lock.json'
 
       # Step 3: Install dependencies inside your project folder

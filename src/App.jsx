@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
+
+// Import your components
 import Navbar from './components/Navbar';
 import Feed from './components/Feed';
 import VideoDetail from './components/VideoDetail';
@@ -8,10 +10,11 @@ import SearchFeed from './components/SearchFeed';
 
 const App = () => (
   <BrowserRouter>
-    <Box sx={{ backgroundColor: '#000' }}>
+    <Box sx={{ backgroundColor: '#0f0f0f' }}>
       <Navbar />
       <Routes>
-        <Route path="/" exact element={<Feed />} />
+        {/* This line forces Feed to load instantly on the homepage */}
+        <Route exact path="/" element={<Feed />} />
         <Route path="/video/:id" element={<VideoDetail />} />
         <Route path="/channel/:id" element={<ChannelDetail />} />
         <Route path="/search/:searchTerm" element={<SearchFeed />} />

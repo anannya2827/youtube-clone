@@ -14,12 +14,12 @@ const Navbar = () => (
     p={2} 
     sx={{ position: 'sticky', background: '#0f0f0f', top: 0, justifyContent: 'space-between', zIndex: 10, height: '56px' }}
   >
-    {/* Left Section: Menu & Logo */}
+    {/* Left Section: Menu & Logo Link Fixed to Route Home */}
     <Stack direction="row" alignItems="center" gap={1}>
       <IconButton sx={{ color: 'white' }}>
         <MenuIcon />
       </IconButton>
-      <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+      <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '2px', textDecoration: 'none' }}>
         <img src="https://i.ibb.co/s9Qys2j/logo.png" alt="logo" height={22} />
         <span style={{ color: 'white', fontWeight: 'bold', fontSize: '18px', fontFamily: '"Oswald", sans-serif', letterSpacing: '-1px' }}>
           YouTube<span style={{ fontSize: '10px', color: '#aaa', marginLeft: '4px', verticalAlign: 'super' }}>IN</span>

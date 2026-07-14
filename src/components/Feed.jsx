@@ -11,26 +11,29 @@ const Feed = () => {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-    // Standardize query name formatting for search execution
     const searchQuery = selectedCategory === 'Home' ? 'New' : selectedCategory;
-    
     fetchFromAPI(`search?part=snippet&q=${searchQuery}`)
-      .then((data) => {
-        if (data?.items) setVideos(data.items);
-      })
-      .catch((err) => console.error("Fetch failure: ", err));
+      .then((data) => { if (data?.items) setVideos(data.items); })
+      .catch((err) => console.error(err));
   }, [selectedCategory]);
 
   return (
-    <Stack direction="row" sx={{ backgroundColor: '#0f0f0f', minHeight: 'calc(100vh - 56px)', width: '100%' }}>
-      {/* Pass structural state parameters down into the updated sidebar module */}
+    <Stack direction="row" sx={{ backgroundColor: '#0f0f0f', height: 'calc(100vh - 56px)', overflow: 'hidden' }}>
       <Box sx={{ display: { xs: 'none', md: 'block' }, flexShrink: 0 }}>
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </Box>
 
-      {/* Central Content Window: Configured layout margins and padding spaces */}
-      <Box p={3} sx={{ overflowY: 'auto', height: 'calc(100vh - 56px)', flex: 1, boxSizing: 'border-box' }}>
-        
+      {/* Main Core Window - Handles full up/down vertical scrolling */}
+      <Box 
+        p={3} 
+        sx={{ 
+          overflowY: 'auto', 
+          overflowX: 'hidden', 
+          flex: 1, 
+          height: '100%',
+          boxSizing: 'border-box'
+        }}
+      >
         {/* Horizontal Chips Tag Row */}
         <Stack 
           direction="row" 
@@ -57,6 +60,7 @@ const Feed = () => {
                   borderRadius: '8px',
                   fontWeight: '500',
                   padding: '6px 14px',
+                  flexShrink: 0,
                   '&:hover': { backgroundColor: isTagActive ? 'white' : '#3d3d3d' }
                 }}
               >
@@ -66,10 +70,7 @@ const Feed = () => {
           })}
         </Stack>
 
-        {/* Video Grid Component Wrapper */}
-        <Box sx={{ width: '100%' }}>
-          <Videos videos={videos} />
-        </Box>
+        <Videos videos={videos} />
       </Box>
     </Stack>
   );

@@ -1,39 +1,59 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box } from '@mui/material';
-import Videos from './Videos';
-import ChannelCard from './ChannelCard';
-import { fetchFromAPI } from '../utils/fetchFromAPI';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Paper, IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
-const ChannelDetail = () => {
-  const [channelDetail, setChannelDetail] = useState(null);
-  const [videos, setVideos] = useState([]);
-  const { id } = useParams();
+const SearchBar = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchFromAPI(`channels?part=snippet&id=${id}`)
-      .then((data) => setChannelDetail(data?.items[0]));
-
-    fetchFromAPI(`search?channelId=${id}&part=snippet&order=date`)
-      .then((data) => setVideos(data?.items));
-  }, [id]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm) {
+      navigate(`/search/${searchTerm}`);
+      setSearchTerm('');
+    }
+  };
 
   return (
-    <Box minHeight="95vh">
-      <Box>
-        <div style={{
-          background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,9,1) 40%, rgba(0,212,255,1) 100%)',
-          zIndex: 10,
-          height: '240px'
-        }} />
-        <ChannelCard channelDetail={channelDetail} marginTop="-110px" />
-      </Box>
-      <Box display="flex" p={3}>
-        <Box sx={{ mr: { sm: '60px' } }} />
-        <Videos videos={videos} />
-      </Box>
-    </Box>
+    <Paper
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        borderRadius: 20,
+        border: '1px solid #e3e3e3',
+        pl: 2, 
+        boxShadow: 'none',
+        mr: { sm: 5 },
+        display: 'flex',
+        alignItems: 'center',
+        background: '#fff',
+        height: '40px',
+        width: '100%'
+      }}
+    >
+      {/* Search Icon placed FIRST pushes it to the leftmost side */}
+      <IconButton type="submit" sx={{ p: '10px', color: 'red' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+
+      <input
+        className="search-bar"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          border: 'none',
+          outline: 'none',
+          width: '100%',
+          marginLeft: '8px',
+          fontSize: '16px',
+          background: 'transparent',
+          color: '#000'
+        }}
+      />
+    </Paper>
   );
 };
 
-export default ChannelDetail;
+export default SearchBar;

@@ -43,23 +43,12 @@ const VideoDetail = () => {
     <Box minHeight="95vh" sx={{ backgroundColor: '#0f0f0f', p: { xs: 2, md: 4 }, width: '100%', boxSizing: 'border-box' }}>
       <Stack direction={{ xs: 'column', lg: 'row' }} gap={4}>
         
-        {/* Left Section: YouTube Standard Video Player Embed Framework */}
         <Box sx={{ flex: 1, width: '100%' }}>
-          <Box 
-            sx={{ 
-              width: '100%', 
-              borderRadius: '12px', 
-              overflow: 'hidden', 
-              backgroundColor: '#000', 
-              aspectRatio: '16/9',
-              boxShadow: '0px 4px 20px rgba(0,0,0,0.4)'
-            }}
-          >
-            {/* Standard native iframe player bypasses react-player version conflicts completely */}
+          <Box sx={{ width: '100%', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#000', aspectRatio: '16/9' }}>
             <iframe
               width="100%"
               height="100%"
-              src={`https://www.youtube.com/embed/${id}?autoplay=1`}
+              src={`https://www.youtube.com/embed/${id}`}
               title={title}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -85,7 +74,6 @@ const VideoDetail = () => {
             </Stack>
           </Stack>
 
-          {/* Video Description Block */}
           <Box sx={{ backgroundColor: '#212121', p: 2, borderRadius: '12px' }}>
             <Typography variant="body2" color="#fff" sx={{ whiteSpace: 'pre-wrap', lineHeight: '1.5rem' }}>
               {description}
@@ -93,7 +81,6 @@ const VideoDetail = () => {
           </Box>
         </Box>
 
-        {/* Right Section: Related Video Feed List */}
         <Box sx={{ width: { xs: '100%', lg: '350px' }, flexShrink: 0 }}>
           <Typography variant="h6" color="#fff" fontWeight="bold" mb={2}>Related Videos</Typography>
           <Videos videos={videos} direction="column" />

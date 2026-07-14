@@ -1,64 +1,59 @@
-import { Stack, Typography, Divider, Box } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
-import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import BrushIcon from '@mui/icons-material/Brush';
-import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
-import HistoryIcon from '@mui/icons-material/History';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Paper, IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
-const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
-  const renderRow = (name, icon) => {
-    const isActive = name === selectedCategory;
-    return (
-      <button
-        key={name}
-        onClick={() => setSelectedCategory(name)}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '24px',
-          width: '100%',
-          padding: '10px 24px',
-          borderRadius: '10px',
-          border: 'none',
-          cursor: 'pointer',
-          backgroundColor: isActive ? '#212121' : 'transparent',
-          color: 'white',
-          textAlign: 'left',
-        }}
-      >
-        <span style={{ display: 'flex', alignItems: 'center', color: 'white' }}>{icon}</span>
-        <Typography variant="body2" sx={{ color: 'white', fontWeight: isActive ? 'bold' : 'normal' }}>
-          {name}
-        </Typography>
-      </button>
-    );
+const SearchBar = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm) {
+      navigate(`/search/${searchTerm}`);
+      setSearchTerm('');
+    }
   };
 
   return (
-    <Box sx={{ width: '240px', height: 'calc(100vh - 56px)', overflowY: 'auto', backgroundColor: '#0f0f0f', borderRight: '1px solid #212121', pt: 1 }}>
-      {renderRow('Home', <HomeIcon />)}
-      <Divider sx={{ borderColor: '#3d3d3d', my: 1.5 }} />
-      <Typography variant="subtitle2" sx={{ color: '#aaa', px: 3, fontWeight: 'bold', mb: 1, fontSize: '11px' }}>MY MIX</Typography>
-      {renderRow('Music', <MusicNoteIcon />)}
-      {renderRow('Tech', <LaptopMacIcon />)}
-      {renderRow('Gaming', <SportsEsportsIcon />)}
-      {renderRow('Cooking', <RestaurantIcon />)}
-      {renderRow('Crafts', <BrushIcon />)}
-      <Divider sx={{ borderColor: '#3d3d3d', my: 1.5 }} />
-      <Typography variant="subtitle2" sx={{ color: '#aaa', px: 3, fontWeight: 'bold', mb: 1, fontSize: '11px' }}>YOU</Typography>
-      {renderRow('Library', <VideoLibraryIcon />)}
-      {renderRow('History', <HistoryIcon />)}
-      <Divider sx={{ borderColor: '#3d3d3d', my: 1.5 }} />
-      <Typography variant="subtitle2" sx={{ color: '#aaa', px: 3, fontWeight: 'bold', mb: 1, fontSize: '11px' }}>EXPLORE</Typography>
-      {renderRow('Trending', <WhatshotIcon />)}
-      {renderRow('Sports', <EmojiEventsIcon />)}
-    </Box>
+    <Paper
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        borderRadius: 20,
+        border: '1px solid #e3e3e3',
+        pl: 2, 
+        boxShadow: 'none',
+        mr: { sm: 5 },
+        display: 'flex',
+        alignItems: 'center',
+        background: '#fff',
+        height: '40px',
+        width: '100%'
+      }}
+    >
+      {/* Search Icon placed FIRST pushes it to the leftmost side */}
+      <IconButton type="submit" sx={{ p: '10px', color: 'red' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+
+      <input
+        className="search-bar"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          border: 'none',
+          outline: 'none',
+          width: '100%',
+          marginLeft: '8px',
+          fontSize: '16px',
+          background: 'transparent',
+          color: '#000'
+        }}
+      />
+    </Paper>
   );
 };
 
-export default Sidebar;
+export default SearchBar;

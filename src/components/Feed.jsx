@@ -18,15 +18,22 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
       const historyData = JSON.parse(localStorage.getItem('watchHistory')) || [];
       setVideos(historyData);
     } else {
-      let searchQuery = selectedCategory === 'Home' ? 'New' : selectedCategory;
+      // Maps 'Home' or 'New' cleanly, otherwise uses the explicit tag string directly
+      let searchQuery = (selectedCategory === 'Home' || selectedCategory === 'New') ? 'New' : selectedCategory;
       
+      // Select a random search vector on fresh site landing to keep things fresh
       if (selectedCategory === 'Home') {
         const randomIndex = Math.floor(Math.random() * dynamicFallbacks.length);
         searchQuery = dynamicFallbacks[randomIndex];
       }
 
-      fetchFromAPI(`search?part=snippet&q=${searchQuery}`)
-        .then((data) => { if (data?.items) setVideos(data.items); })
+      // Appends strict page result sizing arguments straight to the query string execution line
+      fetchFromAPI(`search?part=snippet&q=${searchQuery}&maxResults=50&type=video`)
+        .then((data) => { 
+          if (data?.items) {
+            setVideos(data.items); 
+          }
+        })
         .catch((err) => console.error(err));
     }
   }, [selectedCategory]);
@@ -40,7 +47,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
   return (
     <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
       
-      {/* Sidebar - Anchored strictly to the absolute left edge */}
+      {/* Absolute Left Sidebar Component */}
       <Box 
         sx={{ 
           position: 'absolute',
@@ -57,7 +64,6 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </Box>
 
-      {/* Dimmer Backdrop Layer */}
       {isSidebarOpen && (
         <Box 
           onClick={() => setIsSidebarOpen(false)} 
@@ -65,7 +71,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         />
       )}
 
-      {/* Main Grid Viewport Layout */}
+      {/* Main Grid Feed Area */}
       <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
         <Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
           <Stack 
@@ -79,7 +85,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
               return (
                 <Button
                   key={tag}
-                  onClick={() => setSelectedCategory(tag === 'New' ? 'Home' : tag)}
+                  onClick={() => setSelectedCategory(tag)}
                   variant="contained"
                   sx={{
                     backgroundColor: isTagActive ? 'white' : '#212121',

@@ -20,7 +20,6 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
     } else {
       let searchQuery = selectedCategory === 'Home' ? 'New' : selectedCategory;
       
-      // If landing fresh on 'Home', randomize keywords to load completely unique dynamic layouts on each reload
       if (selectedCategory === 'Home') {
         const randomIndex = Math.floor(Math.random() * dynamicFallbacks.length);
         searchQuery = dynamicFallbacks[randomIndex];
@@ -39,17 +38,17 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
+    <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
       
-      {/* Structural Sidebar Panel - Anchored strictly to the extreme left side grid */}
+      {/* THE ONLY SIDEBAR: Securely fixed to the true left boundary wall */}
       <Box 
         sx={{ 
           position: 'absolute',
           top: 0,
-          left: isSidebarOpen ? 0 : '-240px', // Slide back out of view cleanly
+          left: isSidebarOpen ? 0 : '-240px', 
           width: '240px',
           height: '100%',
-          zIndex: 200, 
+          zIndex: 250, 
           transition: 'left 0.2s ease-in-out',
           backgroundColor: '#0f0f0f',
           boxShadow: isSidebarOpen ? '4px 0px 15px rgba(0,0,0,0.6)' : 'none'
@@ -58,7 +57,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </Box>
 
-      {/* Dimmer layer background to cover text elements while sidebar panel is active */}
+      {/* Click-away backdrop layer */}
       {isSidebarOpen && (
         <Box 
           onClick={() => setIsSidebarOpen(false)} 
@@ -66,7 +65,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         />
       )}
 
-      {/* Main Workspace Feed Layout Area */}
+      {/* Main Grid Feed Canvas - Completely free of floating menu blocks */}
       <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
         <Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
           <Stack 

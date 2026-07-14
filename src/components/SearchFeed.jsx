@@ -10,14 +10,18 @@ const SearchFeed = () => {
 
   useEffect(() => {
     fetchFromAPI(`search?part=snippet&q=${searchTerm}`)
-      .then((data) => setVideos(data.items));
+      .then((data) => setVideos(data.items))
+      .catch((err) => console.error(err));
   }, [searchTerm]);
 
   return (
-    <Box p={2} sx={{ overflowY: 'auto', height: '90vh', flex: 2 }}>
-      <Typography variant="h4" fontWeight="bold" mb={2} sx={{ color: 'white' }}>
-        Search Results for: <span style={{ color: '#FC1503' }}>{searchTerm}</span>
+    <Box p={3} sx={{ overflowY: 'auto', height: '90vh', backgroundColor: '#0f0f0f', boxSizing: 'border-box' }}>
+      {/* Search Header Result Title */}
+      <Typography variant="h5" fontWeight="bold" mb={3} sx={{ color: 'white' }}>
+        Search Results for: <span style={{ color: '#F31503' }}>{searchTerm}</span>
       </Typography>
+
+      {/* Renders the videos grid directly without placeholder alert texts */}
       <Videos videos={videos} />
     </Box>
   );

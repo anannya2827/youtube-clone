@@ -40,12 +40,12 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
   return (
     <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
       
-      {/* THE ONLY SIDEBAR: Securely fixed to the true left boundary wall */}
+      {/* THE ONLY SIDEBAR CONTAINER: Permanently anchored to the left border corner */}
       <Box 
         sx={{ 
           position: 'absolute',
           top: 0,
-          left: isSidebarOpen ? 0 : '-240px', 
+          left: isSidebarOpen ? 0 : '-240px', // Slide in and out flawlessly from absolute left edge
           width: '240px',
           height: '100%',
           zIndex: 250, 
@@ -57,15 +57,15 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </Box>
 
-      {/* Click-away backdrop layer */}
+      {/* Dimmer backdrop overlay */}
       {isSidebarOpen && (
         <Box 
           onClick={() => setIsSidebarOpen(false)} 
-          sx={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 150 }} 
+          sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 150 }} 
         />
       )}
 
-      {/* Main Grid Feed Canvas - Completely free of floating menu blocks */}
+      {/* Main Grid Feed Canvas Layout Area */}
       <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
         <Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
           <Stack 

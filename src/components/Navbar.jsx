@@ -12,14 +12,10 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
     direction="row" 
     alignItems="center" 
     p={2} 
-    sx={{ position: 'sticky', background: '#0f0f0f', top: 0, justifyContent: 'space-between', zIndex: 100, height: '56px' }}
+    sx={{ position: 'sticky', background: '#0f0f0f', top: 0, justifyContent: 'space-between', zIndex: 300, height: '56px', borderBottom: '1px solid #212121' }}
   >
-    {/* Left Section: Clicking MenuIcon toggles visibility */}
     <Stack direction="row" alignItems="center" gap={1}>
-      <IconButton 
-        sx={{ color: 'white' }} 
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-      >
+      <IconButton sx={{ color: 'white' }} onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
         <MenuIcon />
       </IconButton>
       <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '2px', textDecoration: 'none' }}>
@@ -30,17 +26,16 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
       </Link>
     </Stack>
 
-    {/* Center Section */}
-    <Stack direction="row" alignItems="center" gap={2} sx={{ flex: 1, justifyContent: 'center', maxWidth: '600px' }}>
-      <Box sx={{ width: '100%' }}>
+    {/* Fixed Center Flex Container - Forces SearchBar view visibility */}
+    <Stack direction="row" alignItems="center" gap={2} sx={{ flex: 1, justifyContent: 'center', maxWidth: '650px', mx: 2 }}>
+      <Box sx={{ width: '100%', minWidth: '150px' }}>
         <SearchBar />
       </Box>
-      <IconButton sx={{ backgroundColor: '#212121', color: 'white', '&:hover': { backgroundColor: '#3d3d3d' } }}>
+      <IconButton sx={{ backgroundColor: '#212121', color: 'white', display: { xs: 'none', sm: 'flex' }, '&:hover': { backgroundColor: '#3d3d3d' } }}>
         <MicIcon />
       </IconButton>
     </Stack>
 
-    {/* Right Section */}
     <Stack direction="row" alignItems="center" gap={1}>
       <IconButton sx={{ color: 'white' }}>
         <VideoCallIcon />
@@ -51,15 +46,7 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
       <Button 
         variant="outlined" 
         startIcon={<AccountCircleIcon />}
-        sx={{ 
-          color: '#3ea6ff', 
-          borderColor: '#3ea6ff', 
-          borderRadius: '20px', 
-          textTransform: 'none',
-          fontWeight: 'bold',
-          ml: 1,
-          '&:hover': { borderColor: '#3ea6ff', backgroundColor: 'rgba(62,166,255,0.1)' }
-        }}
+        sx={{ color: '#3ea6ff', borderColor: '#3ea6ff', borderRadius: '20px', textTransform: 'none', fontWeight: 'bold', ml: 1, '&:hover': { borderColor: '#3ea6ff', backgroundColor: 'rgba(62,166,255,0.1)' } }}
       >
         Sign in
       </Button>

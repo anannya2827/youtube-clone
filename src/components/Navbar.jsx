@@ -12,17 +12,8 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
     direction="row" 
     alignItems="center" 
     p={2} 
-    sx={{ 
-      position: 'sticky', 
-      background: '#0f0f0f', 
-      top: 0, 
-      justifyContent: 'space-between', 
-      zIndex: 300, 
-      height: '56px', 
-      borderBottom: '1px solid #212121' 
-    }}
+    sx={{ position: 'sticky', background: '#0f0f0f', top: 0, justifyContent: 'space-between', zIndex: 300, height: '56px', borderBottom: '1px solid #212121' }}
   >
-    {/* Left Side: Hamburger Icon */}
     <Stack direction="row" alignItems="center" gap={1}>
       <IconButton sx={{ color: 'white' }} onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
         <MenuIcon />
@@ -35,7 +26,6 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
       </Link>
     </Stack>
 
-    {/* Center Section: Search Bar */}
     <Stack direction="row" alignItems="center" gap={2} sx={{ flex: 1, justifyContent: 'center', maxWidth: '650px', mx: 2 }}>
       <Box sx={{ width: '100%', minWidth: '200px' }}>
         <SearchBar />
@@ -45,7 +35,6 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
       </IconButton>
     </Stack>
 
-    {/* Right Side Tools */}
     <Stack direction="row" alignItems="center" gap={1}>
       <IconButton sx={{ color: 'white' }}>
         <VideoCallIcon />
@@ -56,15 +45,7 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
       <Button 
         variant="outlined" 
         startIcon={<AccountCircleIcon />}
-        sx={{ 
-          color: '#3ea6ff', 
-          borderColor: '#3ea6ff', 
-          borderRadius: '20px', 
-          textTransform: 'none', 
-          fontWeight: 'bold', 
-          ml: 1, 
-          '&:hover': { borderColor: '#3ea6ff', backgroundColor: 'rgba(62,166,255,0.1)' } 
-        }}
+        sx={{ color: '#3ea6ff', borderColor: '#3ea6ff', borderRadius: '20px', textTransform: 'none', fontWeight: 'bold', ml: 1, '&:hover': { borderColor: '#3ea6ff', backgroundColor: 'rgba(62,166,255,0.1)' } }}
       >
         Sign in
       </Button>

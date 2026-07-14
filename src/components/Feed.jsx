@@ -6,10 +6,9 @@ import Sidebar from './Sidebar';
 import Videos from './Videos';
 
 const tags = ['New', 'Music', 'Tech', 'Gaming', 'Cooking', 'Crafts', 'Sports', 'Live', 'Sci-Fi'];
-const dynamicFallbacks = ['Trending World', 'New Clips', 'Popular Now', 'Viral Videos', 'Latest Uploads'];
 
 const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const [selectedCategory, setSelectedCategory] = useState('Home'); 
+  const [selectedCategory, setSelectedCategory] = useState('New'); 
   const [videos, setVideos] = useState([]);
   const scrollContainerRef = useRef(null);
 
@@ -18,23 +17,16 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
       const historyData = JSON.parse(localStorage.getItem('watchHistory')) || [];
       setVideos(historyData);
     } else {
-      // Maps 'Home' or 'New' cleanly, otherwise uses the explicit tag string directly
-      let searchQuery = (selectedCategory === 'Home' || selectedCategory === 'New') ? 'New' : selectedCategory;
-      
-      // Select a random search vector on fresh site landing to keep things fresh
-      if (selectedCategory === 'Home') {
-        const randomIndex = Math.floor(Math.random() * dynamicFallbacks.length);
-        searchQuery = dynamicFallbacks[randomIndex];
-      }
+      // Clean query text selector to ensure the YouTube API returns heavy result loads
+      const queryParam = selectedCategory === 'Home' ? 'New' : selectedCategory;
 
-      // Appends strict page result sizing arguments straight to the query string execution line
-      fetchFromAPI(`search?part=snippet&q=${searchQuery}&maxResults=50&type=video`)
+      fetchFromAPI(`search?part=snippet&q=${queryParam}`)
         .then((data) => { 
-          if (data?.items) {
+          if (data?.items && data.items.length > 0) {
             setVideos(data.items); 
           }
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error("Error updating feed criteria: ", err));
     }
   }, [selectedCategory]);
 
@@ -47,7 +39,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
   return (
     <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
       
-      {/* Absolute Left Sidebar Component */}
+      {/* Absolute Sliding Left Drawer Sidebar */}
       <Box 
         sx={{ 
           position: 'absolute',
@@ -71,8 +63,10 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         />
       )}
 
-      {/* Main Grid Feed Area */}
+      {/* Main Layout Video Display Workstation Canvas */}
       <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
+        
+        {/* Horizontal Category Tag Filters Chips Section */}
         <Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
           <Stack 
             ref={scrollContainerRef}
@@ -108,6 +102,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
           </IconButton>
         </Stack>
 
+        {/* High-density grid display matrix box container */}
         <Box sx={{ width: '100%' }}>
           <Videos videos={videos} />
         </Box>

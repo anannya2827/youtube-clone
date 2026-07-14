@@ -3,17 +3,20 @@ import { Typography, Card, CardContent, CardMedia } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const VideoCard = ({ video }) => {
-  // Extract parameters cleanly to block broken paths like /video/q/id
-  const videoId = video?.id?.videoId;
+  // Extract id parameters across different search/video list shapes cleanly
+  const videoId = video?.id?.videoId || video?.id;
   const snippet = video?.snippet;
 
-  if (!videoId) return null; // Filters out broken tracking data links
+  if (!videoId || typeof videoId !== 'string') return null; 
 
   const handleAddToHistory = () => {
     try {
       const existingHistory = JSON.parse(localStorage.getItem('watchHistory')) || [];
-      const filteredHistory = existingHistory.filter((item) => item.id?.videoId !== videoId);
-      const updatedHistory = [{ id: { videoId }, snippet }, ...filteredHistory];
+      const filteredHistory = existingHistory.filter((item) => {
+        const idToCheck = item?.id?.videoId || item?.id;
+        return idToCheck !== videoId;
+      });
+      const updatedHistory = [{ id: videoId, snippet }, ...filteredHistory];
       localStorage.setItem('watchHistory', JSON.stringify(updatedHistory));
     } catch (error) {
       console.error(error);
@@ -22,10 +25,9 @@ const VideoCard = ({ video }) => {
 
   return (
     <Card sx={{ width: '100%', boxShadow: 'none', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
-      {/* Route paths direct targeting guarantees flawless execution inside VideoDetail hooks */}
       <Link to={`/video/${videoId}`} onClick={handleAddToHistory}>
         <CardMedia 
-          image={snippet?.thumbnails?.high?.url} 
+          image={snippet?.thumbnails?.high?.url || snippet?.thumbnails?.medium?.url} 
           alt={snippet?.title} 
           sx={{ width: '100%', height: 180, borderRadius: '12px', transition: 'transform 0.2s ease', '&:hover': { transform: 'scale(1.02)' } }} 
         />

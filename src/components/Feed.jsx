@@ -40,12 +40,12 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
   return (
     <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
       
-      {/* THE ONLY SIDEBAR CONTAINER: Permanently anchored to the left border corner */}
+      {/* Sidebar - Anchored strictly to the absolute left edge */}
       <Box 
         sx={{ 
           position: 'absolute',
           top: 0,
-          left: isSidebarOpen ? 0 : '-240px', // Slide in and out flawlessly from absolute left edge
+          left: isSidebarOpen ? 0 : '-240px', 
           width: '240px',
           height: '100%',
           zIndex: 250, 
@@ -57,7 +57,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </Box>
 
-      {/* Dimmer backdrop overlay */}
+      {/* Dimmer Backdrop Layer */}
       {isSidebarOpen && (
         <Box 
           onClick={() => setIsSidebarOpen(false)} 
@@ -65,7 +65,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         />
       )}
 
-      {/* Main Grid Feed Canvas Layout Area */}
+      {/* Main Grid Viewport Layout */}
       <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
         <Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
           <Stack 

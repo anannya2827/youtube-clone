@@ -7,16 +7,19 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SearchBar from './SearchBar';
 
-const Navbar = () => (
+const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
   <Stack 
     direction="row" 
     alignItems="center" 
     p={2} 
-    sx={{ position: 'sticky', background: '#0f0f0f', top: 0, justifyContent: 'space-between', zIndex: 10, height: '56px' }}
+    sx={{ position: 'sticky', background: '#0f0f0f', top: 0, justifyContent: 'space-between', zIndex: 100, height: '56px' }}
   >
-    {/* Left Section: Menu & Logo Link Fixed to Route Home */}
+    {/* Left Section: Clicking MenuIcon toggles visibility */}
     <Stack direction="row" alignItems="center" gap={1}>
-      <IconButton sx={{ color: 'white' }}>
+      <IconButton 
+        sx={{ color: 'white' }} 
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
         <MenuIcon />
       </IconButton>
       <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '2px', textDecoration: 'none' }}>
@@ -27,7 +30,7 @@ const Navbar = () => (
       </Link>
     </Stack>
 
-    {/* Center Section: Search & Microphone */}
+    {/* Center Section */}
     <Stack direction="row" alignItems="center" gap={2} sx={{ flex: 1, justifyContent: 'center', maxWidth: '600px' }}>
       <Box sx={{ width: '100%' }}>
         <SearchBar />
@@ -37,7 +40,7 @@ const Navbar = () => (
       </IconButton>
     </Stack>
 
-    {/* Right Section: Utility Tools & Sign In */}
+    {/* Right Section */}
     <Stack direction="row" alignItems="center" gap={1}>
       <IconButton sx={{ color: 'white' }}>
         <VideoCallIcon />

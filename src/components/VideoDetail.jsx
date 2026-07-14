@@ -65,7 +65,7 @@ const VideoDetail = () => {
             </Stack>
           </Stack>
 
-          {/* Collapsible-Style Youtube Dark Description Component Panel */}
+        
           <Box sx={{ backgroundColor: '#212121', p: 2, borderRadius: '12px', mt: 2 }}>
             <Typography variant="body2" color="#fff" sx={{ whiteSpace: 'pre-wrap', lineHeight: '1.5rem' }}>
               {description}
@@ -73,7 +73,7 @@ const VideoDetail = () => {
           </Box>
         </Box>
 
-        {/* Right Column: Dynamic Column List Feed of Related Videos */}
+   
         <Box px={2} py={{ xs: 5, lg: 0 }} justifyContent="center" alignItems="center" sx={{ width: { xs: '100%', lg: '25%' }, maxHeight: '90vh', overflowY: 'auto' }}>
           <Typography variant="h6" color="#fff" fontWeight="bold" mb={2}>
             Up Next

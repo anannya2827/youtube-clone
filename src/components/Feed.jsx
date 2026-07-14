@@ -23,18 +23,9 @@ const Feed = () => {
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </Box>
 
-      {/* Main Core Window - Handles full up/down vertical scrolling */}
-      <Box 
-        p={3} 
-        sx={{ 
-          overflowY: 'auto', 
-          overflowX: 'hidden', 
-          flex: 1, 
-          height: '100%',
-          boxSizing: 'border-box'
-        }}
-      >
-        {/* Horizontal Chips Tag Row */}
+      <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
+        
+        {/* Horizontal Scroll Bar for Category Tags - Supports Left/Right Swiping */}
         <Stack 
           direction="row" 
           gap={1.5} 
@@ -43,7 +34,10 @@ const Feed = () => {
             mb: 3, 
             pb: 1, 
             whiteSpace: 'nowrap',
-            '&::-webkit-scrollbar': { height: '0px' } 
+            width: '100%',
+            scrollbarWidth: 'none', // Hides scrollbar on Firefox
+            '&::-webkit-scrollbar': { display: 'none' }, // Hides scrollbar on Chrome, Safari, and Edge
+            msOverflowStyle: 'none', // Hides scrollbar on IE/Edge
           }}
         >
           {tags.map((tag) => {
@@ -70,7 +64,9 @@ const Feed = () => {
           })}
         </Stack>
 
-        <Videos videos={videos} />
+        <Box sx={{ width: '100%' }}>
+          <Videos videos={videos} />
+        </Box>
       </Box>
     </Stack>
   );

@@ -22,7 +22,7 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
       borderBottom: '1px solid #212121' 
     }}
   >
-    {/* Left Side: Hamburger Symbol that controls the ONLY sidebar */}
+    {/* Left Side: Hamburger Icon */}
     <Stack direction="row" alignItems="center" gap={1}>
       <IconButton sx={{ color: 'white' }} onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
         <MenuIcon />
@@ -35,7 +35,7 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => (
       </Link>
     </Stack>
 
-    {/* Center Section: Perfectly Centered & Responsive Search Box */}
+    {/* Center Section: Search Bar */}
     <Stack direction="row" alignItems="center" gap={2} sx={{ flex: 1, justifyContent: 'center', maxWidth: '650px', mx: 2 }}>
       <Box sx={{ width: '100%', minWidth: '200px' }}>
         <SearchBar />

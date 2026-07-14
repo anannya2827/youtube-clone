@@ -3,15 +3,17 @@ import VideoCard from './VideoCard';
 import ChannelCard from './ChannelCard';
 
 const Videos = ({ videos, direction }) => {
-  if (!videos?.length) return <div style={{ color: '#aaa', padding: '20px' }}>Loading streaming elements...</div>;
+  if (!videos?.length) {
+    return <div style={{ color: '#aaa', padding: '20px' }}>Loading streaming elements...</div>;
+  }
 
-  // Handles sidebar stack formatting within the player routing detail view layout
+  // Handles sidebar lists inside the Player routing detail layout
   if (direction === 'column') {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
         {videos.map((item, idx) => (
           <Box key={idx} sx={{ width: '100%' }}>
-            {item.id?.videoId && <VideoCard video={item} />}
+            {(item.id?.videoId || typeof item.id === 'string') && <VideoCard video={item} />}
             {item.id?.channelId && <ChannelCard channelDetail={item} />}
           </Box>
         ))}
@@ -20,25 +22,30 @@ const Videos = ({ videos, direction }) => {
   }
 
   return (
-    // Beautiful, fully fluid grid framework that handles vertical and horizontal item wrapping smoothly
+    // Explicit full responsive layout grid wrapper handles massive card volumes cleanly
     <Box 
       sx={{ 
         display: 'grid',
         gridTemplateColumns: {
-          xs: '1fr',
-          sm: 'repeat(2, 1fr)',
-          md: 'repeat(2, 1fr)',
-          lg: 'repeat(3, 1fr)',
-          xl: 'repeat(4, 1fr)'
+          xs: '1fr',           // 1 card on tiny mobile screens
+          sm: 'repeat(2, 1fr)', // 2 cards on larger mobile/tablets
+          md: 'repeat(3, 1fr)', // 3 cards on desktop monitors
+          lg: 'repeat(4, 1fr)'  // 4 cards on massive display panels
         },
-        gap: '24px 16px',
-        width: '100%'
+        gap: '24px 16px',      // Vertical and horizontal spacing between items
+        width: '100%',
+        boxSizing: 'border-box'
       }}
     >
       {videos.map((item, idx) => (
         <Box key={idx} sx={{ width: '100%' }}>
-          {item.id?.videoId && <VideoCard video={item} />}
-          {item.id?.channelId && <ChannelCard channelDetail={item} />}
+          {/* Support standard video layout items and mock backup identifiers cleanly */}
+          {(item.id?.videoId || typeof item.id === 'string' || item.id?.playlistId) && (
+            <VideoCard video={item} />
+          )}
+          {item.id?.channelId && (
+            <ChannelCard channelDetail={item} />
+          )}
         </Box>
       ))}
     </Box>

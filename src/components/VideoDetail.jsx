@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import ReactPlayer from 'react-player';
 import { Typography, Box, Stack } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { fetchFromAPI } from '../utils/fetchFromAPI';
@@ -16,33 +15,56 @@ const VideoDetail = () => {
     window.scrollTo(0, 0);
 
     fetchFromAPI(`videos?part=snippet,statistics&id=${id}`)
-      .then((data) => { if (data?.items?.length) setVideoDetail(data.items[0]); })
+      .then((data) => { 
+        if (data?.items?.length) setVideoDetail(data.items[0]); 
+      })
       .catch((err) => console.error(err));
 
     fetchFromAPI(`search?part=snippet&relatedToVideoId=${id}&type=video`)
-      .then((data) => { if (data?.items) setVideos(data.items); })
+      .then((data) => { 
+        if (data?.items) setVideos(data.items); 
+      })
       .catch((err) => console.error(err));
   }, [id]);
 
-  if (!videoDetail?.snippet) return <Box minHeight="95vh" p={4}><Typography color="white">Loading streaming components...</Typography></Box>;
+  if (!videoDetail?.snippet) {
+    return (
+      <Box minHeight="95vh" p={4} sx={{ backgroundColor: '#0f0f0f' }}>
+        <Typography color="white">Loading streaming components...</Typography>
+      </Box>
+    );
+  }
 
   const { title, channelId, channelTitle, description } = videoDetail.snippet;
   const viewCount = videoDetail.statistics?.viewCount || "0";
   const likeCount = videoDetail.statistics?.likeCount || "0";
 
   return (
-    <Box minHeight="95vh" sx={{ backgroundColor: '#0f0f0f', p: { xs: 2, md: 4 } }}>
+    <Box minHeight="95vh" sx={{ backgroundColor: '#0f0f0f', p: { xs: 2, md: 4 }, width: '100%', boxSizing: 'border-box' }}>
       <Stack direction={{ xs: 'column', lg: 'row' }} gap={4}>
         
-        {/* Left Column: Player & Description */}
+        {/* Left Section: YouTube Standard Video Player Embed Framework */}
         <Box sx={{ flex: 1, width: '100%' }}>
-          <Box sx={{ width: '100%', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#000', aspectRatio: '16/9' }}>
-            <ReactPlayer 
-              url={`https://www.youtube.com/watch?v=${id}`} 
-              controls 
+          <Box 
+            sx={{ 
+              width: '100%', 
+              borderRadius: '12px', 
+              overflow: 'hidden', 
+              backgroundColor: '#000', 
+              aspectRatio: '16/9',
+              boxShadow: '0px 4px 20px rgba(0,0,0,0.4)'
+            }}
+          >
+            {/* Standard native iframe player bypasses react-player version conflicts completely */}
+            <iframe
               width="100%"
               height="100%"
-              playing
+              src={`https://www.youtube.com/embed/${id}?autoplay=1`}
+              title={title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              style={{ border: 'none' }}
             />
           </Box>
           
@@ -63,6 +85,7 @@ const VideoDetail = () => {
             </Stack>
           </Stack>
 
+          {/* Video Description Block */}
           <Box sx={{ backgroundColor: '#212121', p: 2, borderRadius: '12px' }}>
             <Typography variant="body2" color="#fff" sx={{ whiteSpace: 'pre-wrap', lineHeight: '1.5rem' }}>
               {description}
@@ -70,7 +93,7 @@ const VideoDetail = () => {
           </Box>
         </Box>
 
-        {/* Right Column: Up Next (NO SIDEBAR HERE) */}
+        {/* Right Section: Related Video Feed List */}
         <Box sx={{ width: { xs: '100%', lg: '350px' }, flexShrink: 0 }}>
           <Typography variant="h6" color="#fff" fontWeight="bold" mb={2}>Related Videos</Typography>
           <Videos videos={videos} direction="column" />

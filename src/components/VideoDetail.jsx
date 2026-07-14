@@ -13,7 +13,7 @@ const VideoDetail = () => {
 
   useEffect(() => {
     if (!id) return;
-    window.scrollTo(0, 0); // Forces standard page resetting onto view context shifts
+    window.scrollTo(0, 0);
 
     fetchFromAPI(`videos?part=snippet,statistics&id=${id}`)
       .then((data) => { if (data?.items?.length) setVideoDetail(data.items[0]); })
@@ -34,7 +34,7 @@ const VideoDetail = () => {
     <Box minHeight="95vh" sx={{ backgroundColor: '#0f0f0f', p: { xs: 2, md: 4 } }}>
       <Stack direction={{ xs: 'column', lg: 'row' }} gap={4}>
         
-        {/* Left Section: Playing Feed, Channel Name & Full Description */}
+        {/* Left Column: Player & Description */}
         <Box sx={{ flex: 1, width: '100%' }}>
           <Box sx={{ width: '100%', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#000', aspectRatio: '16/9' }}>
             <ReactPlayer 
@@ -70,7 +70,7 @@ const VideoDetail = () => {
           </Box>
         </Box>
 
-        {/* Right Section: Related Video Stream Catalog Layout list */}
+        {/* Right Column: Up Next (NO SIDEBAR HERE) */}
         <Box sx={{ width: { xs: '100%', lg: '350px' }, flexShrink: 0 }}>
           <Typography variant="h6" color="#fff" fontWeight="bold" mb={2}>Related Videos</Typography>
           <Videos videos={videos} direction="column" />

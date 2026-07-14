@@ -1,34 +1,30 @@
-import { Stack, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import VideoCard from './VideoCard';
 import ChannelCard from './ChannelCard';
 
-const Videos = ({ videos }) => {
-  if (!videos?.length) return <div style={{ color: 'white', padding: '20px' }}>Loading...</div>;
+const Videos = ({ videos, direction }) => {
+  if (!videos?.length) return <div style={{ color: '#aaa', padding: '20px' }}>Loading feeds...</div>;
   
   return (
-    <Stack 
-      direction="row" 
-      flexWrap="wrap" 
-      justifyContent="start" 
-      alignItems="start"
-      gap={2}
-      sx={{ width: '100%' }}
+    <Box 
+      sx={{ 
+        display: 'grid',
+        // If direction is row (like on video detail sidebar), stack them vertically in 1 column. 
+        // Otherwise, render a fluid grid layout for the homepage feed.
+        gridTemplateColumns: direction === 'column' 
+          ? '1fr' 
+          : { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
+        gap: '24px 16px',
+        width: '100%'
+      }}
     >
       {videos.map((item, idx) => (
-        <Box 
-          key={idx} 
-          sx={{ 
-            width: { xs: '100%', sm: 'calc(50% - 8px)', md: 'calc(33.33% - 11px)', lg: 'calc(25% - 12px)' },
-            minWidth: '280px',
-            flexGrow: 0,
-            flexShrink: 0
-          }}
-        >
+        <Box key={idx} sx={{ width: '100%' }}>
           {item.id.videoId && <VideoCard video={item} />}
           {item.id.channelId && <ChannelCard channelDetail={item} />}
         </Box>
       ))}
-    </Stack>
+    </Box>
   );
 };
 

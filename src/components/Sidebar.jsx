@@ -1,4 +1,4 @@
-import { Stack, Typography, Divider, Box } from '@mui/material';
+import { Typography, Divider, Box } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import LaptopMacIcon from '@mui/icons-material/LaptopMac';
@@ -40,17 +40,7 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
   };
 
   return (
-    <Box 
-      sx={{ 
-        width: '240px', 
-        height: '100%', 
-        overflowY: 'auto', 
-        backgroundColor: '#0f0f0f', 
-        borderRight: '1px solid #212121', 
-        pt: 1,
-        boxSizing: 'border-box'
-      }}
-    >
+    <Box sx={{ width: '240px', height: '100%', overflowY: 'auto', backgroundColor: '#0f0f0f', borderRight: '1px solid #212121', pt: 1, boxSizing: 'border-box' }}>
       {renderRow('Home', <HomeIcon />)}
       <Divider sx={{ borderColor: '#3d3d3d', my: 1.5 }} />
       <Typography variant="subtitle2" sx={{ color: '#aaa', px: 3, fontWeight: 'bold', mb: 1, fontSize: '11px' }}>MY MIX</Typography>

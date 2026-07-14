@@ -12,11 +12,13 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 const Sidebar = ({ selectedCategory, setSelectedCategory }) => {
   const renderRow = (name, icon) => {
-    const isActive = name === selectedCategory;
+    // Standardizes match evaluations cleanly across state transitions
+    const isActive = name === selectedCategory || (name === 'Home' && selectedCategory === 'New');
+    
     return (
       <button
         key={name}
-        onClick={() => setSelectedCategory(name)}
+        onClick={() => setSelectedCategory(name === 'Home' ? 'New' : name)}
         style={{
           display: 'flex',
           alignItems: 'center',

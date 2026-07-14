@@ -7,7 +7,7 @@ import Videos from './Videos';
 
 const tags = ['New', 'Music', 'Tech', 'Gaming', 'Cooking', 'Crafts', 'Sports', 'Live', 'Sci-Fi'];
 
-const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
+const Feed = ({ isSidebarOpen }) => {
   const [selectedCategory, setSelectedCategory] = useState('Home'); 
   const [videos, setVideos] = useState([]);
   const scrollContainerRef = useRef(null);
@@ -24,7 +24,6 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
     }
   }, [selectedCategory]);
 
-  // Handler to scroll the categories horizontal container to the right
   const handleScrollRight = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
@@ -32,19 +31,26 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
   };
 
   return (
-    <Box sx={{ backgroundColor: '#0f0f0f', height: 'calc(100vh - 56px)', position: 'relative', overflow: 'hidden' }}>
+    <Stack direction="row" sx={{ backgroundColor: '#0f0f0f', height: 'calc(100vh - 56px)', overflow: 'hidden', position: 'relative' }}>
       
-      <Box sx={{ position: 'absolute', top: 0, left: isSidebarOpen ? 0 : '-240px', height: '100%', zIndex: 90, transition: 'left 0.3s ease-in-out' }}>
+      {/* Sidebar fixed to the extreme left panel boundary */}
+      <Box 
+        sx={{ 
+          width: isSidebarOpen ? '240px' : '0px',
+          minWidth: isSidebarOpen ? '240px' : '0px',
+          transition: 'all 0.2s ease-in-out',
+          overflow: 'hidden',
+          backgroundColor: '#0f0f0f',
+          zIndex: 95
+        }}
+      >
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </Box>
 
-      {isSidebarOpen && (
-        <Box onClick={() => setIsSidebarOpen(false)} sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 80 }} />
-      )}
-
-      <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box', width: '100%' }}>
+      {/* Main Container Area */}
+      <Box p={3} sx={{ overflowY: 'auto', flex: 1, height: '100%', boxSizing: 'border-box' }}>
         
-        {/* Category Row with a Dynamic Right Arrow Scroll Trigger */}
+        {/* Chips Categories Navigation Row */}
         <Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
           <Stack 
             ref={scrollContainerRef}
@@ -54,7 +60,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
               overflowX: 'auto', 
               whiteSpace: 'nowrap',
               width: '100%',
-              pr: '50px', // Prevents button overlapping the last chip element
+              pr: '50px',
               scrollbarWidth: 'none',
               '&::-webkit-scrollbar': { display: 'none' }
             }}
@@ -83,7 +89,6 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
             })}
           </Stack>
 
-          {/* Dynamic Scroll Right Button ('>') */}
           <IconButton 
             onClick={handleScrollRight}
             sx={{ 
@@ -91,7 +96,6 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
               right: 0, 
               backgroundColor: '#212121', 
               color: 'white',
-              boxShadow: 'left',
               '&:hover': { backgroundColor: '#3d3d3d' },
               zIndex: 5
             }}
@@ -100,15 +104,12 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
           </IconButton>
         </Stack>
 
+        {/* Video Grid Feed layout display matrix */}
         <Box sx={{ width: '100%' }}>
-          {selectedCategory === 'History' && videos.length === 0 ? (
-            <Typography variant="body1" color="#aaa" sx={{ p: 2 }}>No watch history found. Start playing videos to view them here!</Typography>
-          ) : (
-            <Videos videos={videos} />
-          )}
+          <Videos videos={videos} />
         </Box>
       </Box>
-    </Box>
+    </Stack>
   );
 };
 

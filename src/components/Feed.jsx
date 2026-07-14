@@ -1,91 +1,134 @@
+import { useState, useEffect, useRef } from 'react';
+import { Box, Stack, Button, IconButton } from '@mui/material';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { fetchFromAPI } from '../utils/fetchFromAPI';
+import Sidebar from './Sidebar';
+import Videos from './Videos';
 
 const tags = ['New', 'Music', 'Tech', 'Gaming', 'Cooking', 'Crafts', 'Sports', 'Live', 'Sci-Fi'];
 
-// Diverse rotating search matrices to guarantee completely distinct video structures on every load
+// A pool of dynamic keywords to pull a completely different set of videos on every page reload
 const dynamicKeywords = [
-  'International Music Festivals',
-  'Latest Technology Innovations',
-  'Popular Gaming Streams',
-  'Trending World News',
-  'Satisfying ASMR Crafts',
-  'Live Sports Highlights',
-  'Advanced Space Science'
+  'Trending World', 
+  'Latest News 2026', 
+  'Popular Music Hits', 
+  'Viral Content', 
+  'Top Global Videos', 
+  'New Tech Gadgets'
 ];
 
 const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
-const [selectedCategory, setSelectedCategory] = useState('New'); 
-const [videos, setVideos] = useState([]);
-@@ -17,16 +28,22 @@
-const historyData = JSON.parse(localStorage.getItem('watchHistory')) || [];
-setVideos(historyData);
-} else {
-      // Clean query text selector to ensure the YouTube API returns heavy result loads
-      const queryParam = selectedCategory === 'Home' ? 'New' : selectedCategory;
-      let activeQuery = selectedCategory;
+  const [selectedCategory, setSelectedCategory] = useState('Home'); 
+  const [videos, setVideos] = useState([]);
+  const scrollContainerRef = useRef(null);
 
-      // When accessing 'New' or 'Home', pick a random query index to make the feed truly dynamic
-      if (selectedCategory === 'New' || selectedCategory === 'Home') {
+  useEffect(() => {
+    if (selectedCategory === 'History') {
+      const historyData = JSON.parse(localStorage.getItem('watchHistory')) || [];
+      setVideos(historyData);
+    } else {
+      let searchQuery = selectedCategory;
+      
+      // If the user lands fresh on 'Home', pick a random keyword to keep the video list dynamic
+      if (selectedCategory === 'Home') {
         const randomIndex = Math.floor(Math.random() * dynamicKeywords.length);
-        activeQuery = dynamicKeywords[randomIndex];
+        searchQuery = dynamicKeywords[randomIndex];
+      } else if (selectedCategory === 'New') {
+        searchQuery = 'Latest Videos';
       }
 
-      fetchFromAPI(`search?part=snippet&q=${queryParam}`)
-      // Live search payload fetching up to 50 items dynamically
-      fetchFromAPI(`search?part=snippet&q=${encodeURIComponent(activeQuery)}&type=video`)
-.then((data) => { 
-          if (data?.items && data.items.length > 0) {
+      // Explicitly pull up to 50 matching videos from the API utility
+      fetchFromAPI(`search?part=snippet&q=${searchQuery}`)
+        .then((data) => { 
           if (data?.items) {
-setVideos(data.items); 
-}
-})
-        .catch((err) => console.error("Error updating feed criteria: ", err));
-        .catch((err) => console.error("Error updating fluid feed matrix: ", err));
-}
-}, [selectedCategory]);
+            setVideos(data.items); 
+          }
+        })
+        .catch((err) => console.error("Error updating feed metrics: ", err));
+    }
+  }, [selectedCategory]);
 
-@@ -39,7 +56,7 @@
-return (
-<Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
+  const handleScrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
 
-      {/* Absolute Sliding Left Drawer Sidebar */}
-      {/* Absolute Sliding Left Sidebar */}
-<Box 
-sx={{ 
-position: 'absolute',
-@@ -63,10 +80,10 @@
-/>
-)}
+  return (
+    <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
+      
+      {/* Sliding Left Drawer Sidebar */}
+      <Box 
+        sx={{ 
+          position: 'absolute',
+          top: 0,
+          left: isSidebarOpen ? 0 : '-240px', 
+          width: '240px',
+          height: '100%',
+          zIndex: 250, 
+          transition: 'left 0.2s ease-in-out',
+          backgroundColor: '#0f0f0f',
+          boxShadow: isSidebarOpen ? '4px 0px 15px rgba(0,0,0,0.6)' : 'none'
+        }}
+      >
+        {/* Pass down the state setters so sidebar links change the central feed queries too */}
+        <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+      </Box>
 
-      {/* Main Layout Video Display Workstation Canvas */}
-      {/* Main Multi-Column Viewport Workspace */}
-<Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
+      {/* Dimmer backdrop overlay layer */}
+      {isSidebarOpen && (
+        <Box 
+          onClick={() => setIsSidebarOpen(false)} 
+          sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 150 }} 
+        />
+      )}
 
-        {/* Horizontal Category Tag Filters Chips Section */}
-        {/* Category Filter Chips Carousel */}
-<Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
-<Stack 
-ref={scrollContainerRef}
-@@ -75,7 +92,7 @@
-sx={{ overflowX: 'auto', whiteSpace: 'nowrap', width: '100%', pr: '50px', scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}
->
-{tags.map((tag) => {
+      {/* Main Dashboard Workspace Canvas */}
+      <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
+        
+        {/* Horizontal Chips Tag Row */}
+        <Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
+          <Stack 
+            ref={scrollContainerRef}
+            direction="row" 
+            gap={1.5} 
+            sx={{ overflowX: 'auto', whiteSpace: 'nowrap', width: '100%', pr: '50px', scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}
+          >
+            {tags.map((tag) => {
               const isTagActive = tag === selectedCategory || (tag === 'New' && selectedCategory === 'Home');
-              const isTagActive = tag === selectedCategory;
-return (
-<Button
-key={tag}
-@@ -102,13 +119,13 @@
-</IconButton>
-</Stack>
+              return (
+                <Button
+                  key={tag}
+                  onClick={() => setSelectedCategory(tag)}
+                  variant="contained"
+                  sx={{
+                    backgroundColor: isTagActive ? 'white' : '#212121',
+                    color: isTagActive ? 'black' : 'white',
+                    textTransform: 'none',
+                    borderRadius: '8px',
+                    fontWeight: '500',
+                    padding: '6px 14px',
+                    flexShrink: 0,
+                    '&:hover': { backgroundColor: isTagActive ? 'white' : '#3d3d3d' }
+                  }}
+                >
+                  {tag}
+                </Button>
+              );
+            })}
+          </Stack>
+          <IconButton onClick={handleScrollRight} sx={{ position: 'absolute', right: 0, backgroundColor: '#212121', color: 'white', '&:hover': { backgroundColor: '#3d3d3d' }, zIndex: 5 }}>
+            <ArrowForwardIosIcon sx={{ fontSize: '14px', pl: '2px' }} />
+          </IconButton>
+        </Stack>
 
-        {/* High-density grid display matrix box container */}
-        {/* Dynamic Responsive Grid Matrix View */}
-<Box sx={{ width: '100%' }}>
-<Videos videos={videos} />
-</Box>
-</Box>
-</Box>
-);
+        {/* Dense, responsive grid displaying multiple rows of cards */}
+        <Box sx={{ width: '100%' }}>
+          <Videos videos={videos} />
+        </Box>
+      </Box>
+    </Box>
+  );
 };
 
 export default Feed;

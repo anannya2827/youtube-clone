@@ -7,18 +7,8 @@ import Videos from './Videos';
 
 const tags = ['New', 'Music', 'Tech', 'Gaming', 'Cooking', 'Crafts', 'Sports', 'Live', 'Sci-Fi'];
 
-// A pool of dynamic keywords to pull a completely different set of videos on every page reload
-const dynamicKeywords = [
-  'Trending World', 
-  'Latest News 2026', 
-  'Popular Music Hits', 
-  'Viral Content', 
-  'Top Global Videos', 
-  'New Tech Gadgets'
-];
-
 const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const [selectedCategory, setSelectedCategory] = useState('Home'); 
+  const [selectedCategory, setSelectedCategory] = useState('New'); 
   const [videos, setVideos] = useState([]);
   const scrollContainerRef = useRef(null);
 
@@ -27,24 +17,13 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
       const historyData = JSON.parse(localStorage.getItem('watchHistory')) || [];
       setVideos(historyData);
     } else {
-      let searchQuery = selectedCategory;
-      
-      // If the user lands fresh on 'Home', pick a random keyword to keep the video list dynamic
-      if (selectedCategory === 'Home') {
-        const randomIndex = Math.floor(Math.random() * dynamicKeywords.length);
-        searchQuery = dynamicKeywords[randomIndex];
-      } else if (selectedCategory === 'New') {
-        searchQuery = 'Latest Videos';
-      }
-
-      // Explicitly pull up to 50 matching videos from the API utility
-      fetchFromAPI(`search?part=snippet&q=${searchQuery}`)
+      fetchFromAPI(`search?q=${selectedCategory}`)
         .then((data) => { 
           if (data?.items) {
             setVideos(data.items); 
           }
         })
-        .catch((err) => console.error("Error updating feed metrics: ", err));
+        .catch((err) => console.error("Grid layout sync error: ", err));
     }
   }, [selectedCategory]);
 
@@ -55,9 +34,10 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
+    // Sets exact viewport bounds relative to top navbar alignment anchors
+    <Box sx={{ display: 'flex', width: '100%', height: 'calc(100vh - 70px)', position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
       
-      {/* Sliding Left Drawer Sidebar */}
+      {/* Sidebar Overlay Shell Wrapper */}
       <Box 
         sx={{ 
           position: 'absolute',
@@ -71,11 +51,9 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
           boxShadow: isSidebarOpen ? '4px 0px 15px rgba(0,0,0,0.6)' : 'none'
         }}
       >
-        {/* Pass down the state setters so sidebar links change the central feed queries too */}
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </Box>
 
-      {/* Dimmer backdrop overlay layer */}
       {isSidebarOpen && (
         <Box 
           onClick={() => setIsSidebarOpen(false)} 
@@ -83,10 +61,8 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
         />
       )}
 
-      {/* Main Dashboard Workspace Canvas */}
+      {/* Main Workspace Display Canvas Grid */}
       <Box p={3} sx={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, height: '100%', boxSizing: 'border-box' }}>
-        
-        {/* Horizontal Chips Tag Row */}
         <Stack direction="row" alignItems="center" sx={{ position: 'relative', width: '100%', mb: 3 }}>
           <Stack 
             ref={scrollContainerRef}
@@ -95,7 +71,7 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
             sx={{ overflowX: 'auto', whiteSpace: 'nowrap', width: '100%', pr: '50px', scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}
           >
             {tags.map((tag) => {
-              const isTagActive = tag === selectedCategory || (tag === 'New' && selectedCategory === 'Home');
+              const isTagActive = tag === selectedCategory;
               return (
                 <Button
                   key={tag}
@@ -122,7 +98,6 @@ const Feed = ({ isSidebarOpen, setIsSidebarOpen }) => {
           </IconButton>
         </Stack>
 
-        {/* Dense, responsive grid displaying multiple rows of cards */}
         <Box sx={{ width: '100%' }}>
           <Videos videos={videos} />
         </Box>
